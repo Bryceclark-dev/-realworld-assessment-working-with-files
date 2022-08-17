@@ -25,7 +25,10 @@ public class Application {
 
     public static String readCSVLines(String filename) throws IOException{
         // read in the file and return its contents
-        return "";
+        Path filePath = Path.of(filename);
+        String csvContent = Files.readString(filePath);
+
+        return csvContent;
     }
 
     public static String[][] saveToMultidimensionalArray(String csvContent, int numRows, int numColumns){
@@ -33,11 +36,19 @@ public class Application {
         String[] csvDataWithoutHeaders = removeCSVHeader(csvLines);
 
         // create a multidimensional array with numRows rows and numColumns columns
+        String[][] multiArray = new String[numRows][numColumns];
 
         // use a nested loop to loop through each line of the CSV to put in the multidimensional array
+        int z = 0;
+        for(int i = 0; i < multiArray.length; i++){
+            for(int j = 0; j < multiArray[i].length; j++){
+                multiArray[i][j] = csvDataWithoutHeaders[z];
+                z++;
+            }
+        }
 
         // return the multidimensional array
-        return new String[][]{};
+        return multiArray;
     }
     
     public static String getWeekToSelectFromData(Scanner scanner){
@@ -75,25 +86,46 @@ public class Application {
         do {
             // TODO: wrap the code inside the do-part of the do-while loop with a try/catch block
             // when the exception is caught, print the message from variable integerExceptionWeekMessage above
-            weekToSelect = getWeekToSelectFromData(scanner);
-            weekNumberToSelect = Integer.parseInt(weekToSelect);
+            try {
+                weekToSelect = getWeekToSelectFromData(scanner);
+                weekNumberToSelect = Integer.parseInt(weekToSelect);
+            }catch(Exception error){
+                System.out.println(integerExceptionWeekMessage);
+            }
         } while(weekNumberToSelect == 0);
 
         // TODO: Throw an InvalidWeekException if the week entered is greater than 10 or less than 1.
         // Use a try/catch block here to catch the exception and print the message before adding an empty return statement.
         // When throwing the exception, pass in the message from variable invalidNumberExceptionWeekMessage.
+        try {
+            if(weekNumberToSelect < 1 || weekNumberToSelect > 10)
+                throw new InvalidWeekException(invalidNumberExceptionWeekMessage);
+        }catch(InvalidWeekException error){
+            System.out.println(error.getMessage());
+            return;
+        }
 
         do {
             // TODO: wrap the code inside the do-part of the do-while loop with a try/catch block
             // when the exception is caught, print the message from variable integerExceptionDayOfWeekMessage above
-            dayToSelect = getDayToSelectFromData(scanner);
-            dayNumberToSelect = Integer.parseInt(dayToSelect);
+            try {
+                dayToSelect = getDayToSelectFromData(scanner);
+                dayNumberToSelect = Integer.parseInt(dayToSelect);
+            }catch(Exception error){
+                System.out.println(integerExceptionDayOfWeekMessage);
+            }
         } while(dayNumberToSelect == 0);
 
         // TODO: Throw an InvalidDayOfWeekException if the day of week entered is greater than 7 or less than 1.
         // Use a try/catch block here to catch the exception and print the message before adding an empty return statement.
         // When throwing the exception, pass in the message from variable invalidNumberExceptionDayOfWeekMessage.
-
+        try {
+            if(dayNumberToSelect < 1 || dayNumberToSelect > 7)
+                throw new InvalidDayOfWeekException(invalidNumberExceptionDayOfWeekMessage);
+        }catch(InvalidDayOfWeekException error){
+            System.out.println(error.getMessage());
+            return;
+        }
 
         // do not change code in main() below this line
         
